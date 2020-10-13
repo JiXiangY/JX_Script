@@ -9,7 +9,6 @@ import hashlib
 import time
 import xlwt
 import datetime
-
 # -------------------------------82311 113746
 # init
 allDataArr = [] #单个项目的数组
