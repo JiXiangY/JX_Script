@@ -38,6 +38,7 @@ def downLoadImage(imageLists,path):
             continue
         i += 1
         print("已下载图片 {}".format(imageName))
+    print("下载完成")
 
 
 
@@ -86,7 +87,7 @@ def getImageID(userID,cookie):
 
     
 
-userID = '6528097052'
+userID = '5880066726'
 cookie =  "SINAGLOBAL=2981512225072.98.1583803257294; _s_tentry=login.sina.com.cn; Apache=2148300458442.729.1601172229290; ULV=1601172229298:25:4:1:2148300458442.729.1601172229290:1601092532038; YF-V-WEIBO-G0=35846f552801987f8c1e8f7cec0e2230; XSRF-TOKEN=Ahcp68lhEagfbrDng8VgLF6f; login_sid_t=9b1e05463a10ce595933f8a8380ba4ce; cross_origin_proto=SSL; wb_view_log_1573330832=1920*10801; SCF=ArdJBzpmCCfiS9auihwRzceLhHQWnFUTWiUoVZ8Fc2TRZ9jNbH0_CMAdfp0ykcrzZx6ERjvGE4Alp-SJoSusXIU.; wb_view_log=1920*10801; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFP6a8-DNgmKsm8B3Nl4nvx5JpX5KzhUgL.Fo2fS0e0e05Re0z2dJLoI0qLxK-L1K5L1h.LxKMLBK-LBK-LxKqL1KnLB-qLxKBLBonL1hMLxKnL1heLB.BLxKML1-2L1hBt; SSOLoginState=1602575149; SUB=_2A25ygSsWDeRhGedL7FES8y7EyD6IHXVR9xverDV8PUNbmtCOLRLGkW9NVKzpJTO9Igv3JbnZ5EQrdklF_MVZw8Y-; SUHB=03oUH8ncSqNWIZ; ALF=1634111175; wvr=6; UOR=,,www.baidu.com; webim_unReadCount=%7B%22time%22%3A1602575924935%2C%22dm_pub_total%22%3A7%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A41%2C%22msgbox%22%3A0%7D"
 imageList = getImageID(userID,cookie)
 print(len(imageList))
