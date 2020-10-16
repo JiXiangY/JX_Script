@@ -72,6 +72,7 @@ def write_file(danMu_list,oldFileName):
         fo.write((new_item+"\r\n").encode('UTF-8'))
         print(new_item)
     fo.close()
+    return fileName
     print("完成")
 
 
@@ -109,4 +110,5 @@ def time_handle(time):
 def danMu_handel(fileName):
     xml = open_file(fileName)
     danMu_List = xml_Json(xml)
-    write_file(danMu_List,fileName)
+    xmlFilePath = write_file(danMu_List,fileName)
+    return xmlFilePath

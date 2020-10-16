@@ -8,6 +8,8 @@ import tkinter.filedialog
 # 创建窗体
 from tkinter import ttk
 from DanMuHandle import danMu_handel
+import os
+import subprocess
 
 window = tk.Tk()
 window.title('弹幕视频合成(吉祥)')
@@ -59,7 +61,33 @@ xmlbtn.place(x=350, y=80, height=30, width=100)
 
 
 def start_handle():
-    danMu_handel(xml_name)
+    if os.path.exists(video_name) == False:
+        tkinter.messagebox.showwarning('警告','视频文件错误')
+        # return
+    if os.path.exists(xml_name) == False:
+        tkinter.messagebox.showwarning('警告','xml文件错误')
+        return
+    ass_name = danMu_handel(xml_name)
+    time.sleep(1)
+    if os.path.exists(ass_name) == False:
+        tkinter.messagebox.showwarning('警告','ass文件错误')
+        return
+    try:
+        # ffmpeg -i test.mp4 -vf subtitles=2.ass -vcodec libx264 out2.mp4
+        command = "ffmpeg -i {} -vf subtitles={} -vcodec libx264 out.mp4".format(video_name,ass_name)
+        cmd(command)
+    except:
+        tkinter.messagebox.showwarning('警告','ass文件错误')
+
+def cmd(command):
+    subp = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,encoding="utf-8")
+    subp.wait(2)
+    while subp.poll != 0:
+        subp.communicate()    
+    if subp.poll() == 0:
+        print(subp.communicate()[1])
+    else:
+        print("失败") 
 
 
 starbtn = tk.Button(window,text= "开始",command=start_handle)

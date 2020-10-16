@@ -1,0 +1,1 @@
+([('UI', '/Users/yujixiang/Desktop/Github仓库/脚本/弹幕合成/dist/UI', 'EXECUTABLE')],)
