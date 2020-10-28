@@ -6,12 +6,18 @@ from GetMessage import *
 from SendMessage import *
 from Verification import *
 
+
+def getMessage():
+    msg_arr = get_fetchLatestMessage()
+    if msg_arr & len(msg_arr) > 0:
+
+
 def main():
     configure()
     verify_session()
-    upload_image("/Users/yujixiang/Desktop/","002Po4pSly1gjk0idcodbj60s71030x002.jpg","friend")
-    # p = threading.Thread(target = absd, args = (3,))
-    # p.start()
+    # upload_image("/Users/yujixiang/Desktop/","002Po4pSly1gjk0idcodbj60s71030x002.jpg","friend")
+    p = threading.Thread(target = getMessage, args = (3,))
+    p.start()
 
 
 if __name__ == "__main__":

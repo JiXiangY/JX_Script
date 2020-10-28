@@ -45,7 +45,7 @@ def get_fetchLatestMessage():
 
 
 # 使用此方法获取bot接收到的最老消息和最老各类事件(不会从MiraiApiHttp消息记录中删除)
-def get_peekMessage():
+def peekLatestMessage():
     configure()
     url ="http://" + configure.host+ ":"+ configure.port + "/peekMessage?sessionKey="+ configure.session + "&count=10"
     response = requests.get(url)
