@@ -8,7 +8,9 @@ class configure():
     session = ""
     authKey = ""
     qq = ""
+    receiveTime = 5
     done = False
+    jiChou = False
     def __init__(self):
         if configure.done == True:
             return
@@ -23,7 +25,9 @@ class configure():
             configure.session = info_json["session"]
             configure.authKey = info_json["authKey"]
             configure.qq = info_json["qq"]
+            configure.receiveTime = info_json["receiveTime"]
             configure.done = True
+            configure.jiChou = info_json["jiChou"]
         except:
             print("configure_json错误")
         
