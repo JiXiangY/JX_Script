@@ -26,5 +26,12 @@ class get_FilePath():
 		file_Path = path+"/Resource/"+file_name
 		return file_Path	
 
+	@staticmethod
+	def get_imagePathList():
+		folder_Path = get_FilePath.save_folder("Image")
+		image_list = os.listdir(folder_Path)
+		return image_list
 
 # print(get_sourePath("JiChou.jpg"))
+
+

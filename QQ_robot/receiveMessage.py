@@ -66,13 +66,15 @@ class receiveMessage():
 	def JiChou_handel(self,text,sende_id,send_to,send_type):
 		#判断是否启用插件
 		if configure.jiChou == True:
-			if sende_id != 443142362: #暂时自己使用
-				return False
 			sub_arr = text.split('#')
 			if sub_arr and len(sub_arr) == 2 and sub_arr[0] == "记仇" and len(sub_arr[1]) > 0:
 				def worker(name,send_to,send_type):
 					try:
-						JiChou.create_JiChouMessage(name,send_to,send_type)
+						if sende_id != 443142362: #暂时自己使用
+							JiChou.create_JiChouOtherMessage(name,send_to,send_type)
+						else:
+							JiChou.create_JiChouMessage(name,send_to,send_type)
+						# JiChou.create_JiChouMessage(name,send_to,send_type)
 					except:
 						print("记仇失败")
 				p = threading.Thread(target = worker, name = "消息发送",args=(sub_arr[1],send_to,send_type))

@@ -9,7 +9,15 @@ class JiChou():
 
 	@staticmethod
 	def drow_JiChou(name):
-		content = "今天\n" + name + "得罪了我\n记下来!" 
+		image_list = get_FilePath.get_imagePathList()
+		content = "今天\n" + name + "得罪了我"+""+"\n记下来!" 
+		count = 0
+		if image_list and len(image_list) > 0 :
+			for item in image_list:
+				if item.startswith(name):
+					count = count + 1
+		if count > 0:
+			content = "{}\n今天又得罪了我\n记下来!(第 {} 次了)" .format(name,count)
 		#创建一个空白的图片，大小为300*200，背景为白色
 		#image = Image.new(mode="RGB", size=(500,260), color=(255,255,255)) 
 		imagePath = get_FilePath.get_sourePath("JiChou.jpg")
@@ -57,6 +65,14 @@ class JiChou():
 			}
 			sendMessage.send_groupMsg(message_json)
 
+	@staticmethod
+	def create_JiChouOtherMessage(name,send_to,send_type):
+		message_json = {
+			"sessionKey": configure.session,
+			"target": send_to,
+			"messageChain":[{ "type": "Plain", "text":"无聊" }]
+		}
+		sendMessage.send_groupMsg(message_json)
 
 # configure()
 # JiChou.create_JiChouMessage("北思","628045903","group")
