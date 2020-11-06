@@ -5,7 +5,7 @@ from GetMessage import getMessage
 import threading
 from Configure_Info import configure
 from Verification import verify
-from drowImage import JiChou
+from drowImage import drowEmoji
 class receiveMessage():
 	def __init__(self):
 		self.timePool = configure.receiveTime
@@ -68,16 +68,29 @@ class receiveMessage():
 		if configure.jiChou == True:
 			sub_arr = text.split('#')
 			if sub_arr and len(sub_arr) == 2 and sub_arr[0] == "记仇" and len(sub_arr[1]) > 0:
-				def worker(name,send_to,send_type):
+				def jichou_worker(name,send_to,send_type):
 					try:
 						if sende_id != 443142362: #暂时自己使用
-							JiChou.create_JiChouOtherMessage(name,send_to,send_type)
+							drowEmoji.create_JiChouOtherMessage(name,send_to,send_type)
 						else:
-							JiChou.create_JiChouMessage(name,send_to,send_type)
-						# JiChou.create_JiChouMessage(name,send_to,send_type)
+							drowEmoji.create_JiChouMessage(name,send_to,send_type)
+						# drowEmoji.create_JiChouMessage(name,send_to,send_type)
 					except:
 						print("记仇失败")
-				p = threading.Thread(target = worker, name = "消息发送",args=(sub_arr[1],send_to,send_type))
+				p = threading.Thread(target = jichou_worker, name = "消息发送",args=(sub_arr[1],send_to,send_type))
+				p.start()
+				return True
+			if sub_arr and len(sub_arr) == 2 and sub_arr[0] == "羡慕" and len(sub_arr[1]) > 0:
+				def xianmu_worker(name,send_to,send_type):
+					try:
+						if sende_id != 443142362: #暂时自己使用
+							drowEmoji.create_JiChouOtherMessage(name,send_to,send_type)
+						else:
+							drowEmoji.create_XianMuMessage(name,send_to,send_type)
+						# drowEmoji.create_XianMuMessage(name,send_to,send_type)
+					except:
+						print("羡慕失败")
+				p = threading.Thread(target = xianmu_worker, name = "消息发送",args=(sub_arr[1],send_to,send_type))
 				p.start()
 				return True
 		return False
