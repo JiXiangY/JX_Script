@@ -6,10 +6,13 @@ import threading
 from Configure_Info import configure
 from Verification import verify
 from drowImage import drowEmoji
+from goodNight import goodNightClass
+
+
 class receiveMessage():
 	def __init__(self):
 		self.timePool = configure.receiveTime
-		
+		self.goodNight = goodNightClass()
 	
 	def run(self):
 		timer = threading.Timer(self.timePool, self.time_Pool)
@@ -46,9 +49,11 @@ class receiveMessage():
 				if item["type"] == "Plain":
 					text = item["text"]
 					#记仇插件
-					if self.JiChou_handel(text,sende_id,group_id,"group") == True:
+					if self.JiChou_handle(text,sende_id,group_id,"group") == True:
 						break
-
+					#晚安式插件
+					if self.GoodNight_handel(messageDic,text) == True:
+						break
 
 
 		
@@ -63,7 +68,7 @@ class receiveMessage():
 
 #-----------------------------具体功能处理-----------------------------------------
 	#处理记仇插件
-	def JiChou_handel(self,text,sende_id,send_to,send_type):
+	def JiChou_handle(self,text,sende_id,send_to,send_type):
 		#判断是否启用插件
 		if configure.jiChou == True:
 			sub_arr = text.split('#')
@@ -95,4 +100,14 @@ class receiveMessage():
 				return True
 		return False
 
+	#晚安式处理插件
+	def GoodNight_handel(self,messageChain,text):
+		isGoodNight = False
+		if text.startswith("晚安式"):
+			#前缀包含晚安式
+			isGoodNight = self.goodNight.judge_goodNightMessageWithMessage(messageChain)
+		elif len(self.goodNight.goodNightKey) > 0 & text.startswith(self.goodNight.goodNightKey):
+			#前缀为晚安式题目
+			isGoodNight = self.goodNight.judge_goodNightMessageWithMessage(messageChain)
+		return isGoodNight
 
