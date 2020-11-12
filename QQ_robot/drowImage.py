@@ -62,7 +62,7 @@ class drowEmoji():
 		pos_x = (width - txtSize[0]) / 2 if width > txtSize[0] else 0
 		pos = (pos_x, 300)
 	
-		draw.text(pos, content, font=imageFont, fill='#000000',align="center") #文字写入图片
+		draw.text(pos, content, font=imageFont, fill='#333333',align="center") #文字写入图片
 		location = name + " 羡慕" + time.strftime(" %Y-%m-%d %H:%M:%S" ,  time.localtime()) + ".png"
 		imagePath = get_FilePath.get_saveImagePath(location)
 		image.save(imagePath) #保存图片
@@ -115,3 +115,5 @@ class drowEmoji():
 
 # configure()
 # JiChou.create_JiChouMessage("北思","628045903","group")
+
+drowEmoji.drow_JiChou("北思")
