@@ -8,19 +8,31 @@ import random
 
 class goodNightClass():
 
-	def __init__(self,messageArr):
+	def __init__(self):
 		self.time= '' #时间
 		self.goodNightKey = '' #晚安式 关键词
-		self.messageArr = messageArr # 晚安式队列
+		self.messageArr = [] # 晚安式队列
 		self.save = False    #是否保存晚安式
-		self.keyWord = [
-			#晚安式指令介绍
-			"开启",
-			"截止",
-			"出图",
-			"清空",
-			"删除"
-		]
+		self.group_id = ""
+		self.keyWord = "晚安式指令介绍\n\
+1.开启指令\n\
+	晚安式#题目#开启\n\
+	启动晚安式并记录题目的消息\n\
+2.截止指令\n\
+	晚安式#截止\n\
+	停止记录晚安式消息\n\
+3.出图指令\n\
+	晚安式#出图\n\
+	输出一张晚安式图\n\
+4.清空指令\n\
+	晚安式#清空\n\
+	清空记录内容\n\
+5.删除指令\n\
+	晚安式#name#删除\n\
+6.帮助指令\n\
+	晚安式#help\n\
+	指令介绍"
+
 
 	#启动晚安式记录
 	def start_saveMeeage(self,goodNightKey):
@@ -28,17 +40,20 @@ class goodNightClass():
 		self.save = True
 		self.messageArr = []
 		self.goodNightKey = goodNightKey
-
+		self.create_goodNightOtherMessage("启动记录晚安式{}".format(self.goodNightKey))
 	#停止晚安式记录
 	def stop_saveMessage(self):
 		self.save = False
-	
+		self.create_goodNightOtherMessage("已停止记录")
+
 	#清空晚安式 并关闭
 	def remove_allMessage(self):
+		self.create_goodNightOtherMessage("记录已清空")
 		self.time = ''
 		self.messageArr = []
 		self.goodNightKey = ''
-
+		self.group_id = ""
+		
 
 	#前缀为 "晚安式"
 	#判断是否指令 
@@ -46,13 +61,16 @@ class goodNightClass():
 		group_id = messageDic["sender"]["group"]["id"]
 		sende_id = messageDic["sender"]["id"]
 		messageChain = messageDic["messageChain"]
+		# if send_id != 443142362:
+		# 	return
 		#处理消息
+		self.group_id = group_id
 		for item in messageChain:
 			if item["type"] == "Plain":
 				text = item["text"]
 				sub_arr = text.split('#')
 				if len(sub_arr)== 3 and sub_arr[0] == "晚安式":
-					if sub_arr[2] == "开启":
+					if sub_arr[2] == "开启":							
 						self.start_saveMeeage("#{}#".format(sub_arr[1]))
 						print("晚安式#{}#开启".format(sub_arr[1]))
 						return True
@@ -66,12 +84,17 @@ class goodNightClass():
 						print("晚安式#截止")
 						return True
 					if sub_arr[1] == "出图":
-						self.drow_goodNightImage()
+						imagePath  = self.drow_goodNightImage()
+						self.create_goodNightImageMessage(imagePath)
 						print("晚安式#出图")
 						return True
-					if sub_arr[2] == "清空":
+					if sub_arr[1] == "清空":
 						self.remove_allMessage()
 						print("晚安式#清空")
+						return True
+					if sub_arr[1] == "help":
+						self.create_goodNightOtherMessage(self.keyWord)
+						print("晚安式#help")
 						return True
 				elif text.startswith(self.goodNightKey):
 					self.add_goodNightMessageWithMessage(messageDic)
@@ -143,16 +166,31 @@ class goodNightClass():
 		weiboList = get_FilePath.get_weiboPathList()
 		rand = random.randint(0,len(weiboList)-1)
 		weiboPath = get_FilePath.get_weiboImagePath(weiboList[rand])
-
+		photo = Image.open(weiboPath)
+		w, h = photo.size
+		newH = int(1080 / w * h)
+		photo =photo.resize((1080, newH),Image.ANTIALIAS)
+		
 
 		#画背景图
-		sum_Height += 1080 #头图高度
+		sum_Height += newH #头图高度
 		sum_Height += 150 #底图高度
 		goodNight_Img = Image.new('RGBA', (1080, sum_Height), "#FFFFFF")
 		goodNight_draw = ImageDraw.Draw(goodNight_Img)
+		#画上头图
+		photoBox = (0,0,1080,newH) #左上右下
+		goodNight_Img.paste(photo, photoBox)
 		
+		#画上晚安式
+		titlePath = get_FilePath.get_sourePath("Hiragino Sans GB.ttc")
+		titleFont = ImageFont.truetype(titlePath, 60,index=2) #定义文字字体及字号，这里用你自己电	脑本地的字体
+		titleSize = goodNight_draw.multiline_textsize(self.goodNightKey, titleFont)
+		titleBox = ((1080-titleSize[0])/2, newH -105 )
+		goodNight_draw.text(titleBox, self.goodNightKey, font=titleFont, fill='#333333',align="center") #文字写入图片
 
-		nextY = 1080
+
+		#中间部分
+		nextY = newH
 		index = 0
 		for item in self.messageArr:
 			#名字
@@ -182,11 +220,12 @@ class goodNightClass():
 		#底图
 		footPath = get_FilePath.get_sourePath("Hiragino Sans GB.ttc")
 		footFont = ImageFont.truetype(footPath, 60,index=2) #定义文字字体及字号，这里用你自己电	脑本地的字体
-		footSize = draw.multiline_textsize("- 李梓应援会 -", footFont)
+		footSize = goodNight_draw.multiline_textsize("- 李梓应援会 -", footFont)
 		pos = ((1080-footSize[0])/2, nextY + 45 )
 		goodNight_draw.text(pos, "- 李梓应援会 -", font=footFont, fill='#333333',align="center") #文字写入图片
 		#保存文件
-		imagePath = get_FilePath.get_saveGoodNightPath("test2.png")
+		imge_name = self.time + ".png"
+		imagePath = get_FilePath.get_saveGoodNightPath(imge_name)
 		goodNight_Img.save(imagePath) #保存图片
 		return imagePath
 	
@@ -204,9 +243,27 @@ class goodNightClass():
 			print("头像下载失败")
 			imge =  Image.new('RGBA', (156, 156), "#FFFF00")
 			imagePath = get_FilePath.get_saveGoodNightPath("{}.png".format(qqID))
-			imge.save(imagePath) #保存图片
+			imge.save(imagePath,quality=50) #保存图片
+	#发送图片消息
+	def create_goodNightImageMessage(self,imagePath):
 
+		json = sendMessage.upload_image(imagePath,"group")
+		if json and json["url"]:
+			message_json = {
+				"sessionKey": configure.session,
+				"target": self.group_id,
+				"messageChain":[{ "type": "Image", "url":json["url"] }]
+			}
+			sendMessage.send_groupMsg(message_json)
 
+	#发送其他消息
+	def create_goodNightOtherMessage(self,message):
+		message_json = {
+			"sessionKey": configure.session,
+			"target": self.group_id,
+			"messageChain":[{ "type": "Plain", "text":message }]
+		}
+		sendMessage.send_groupMsg(message_json)
 #---------------------------下面是资料
 #http://q1.qlogo.cn/g?b=qq&nk=443142362&s=640 QQ头像接口
 
@@ -291,9 +348,9 @@ class ImgText:
 # n = ImgText("就在这时，随着他身心的调和，一个个记忆片段突兀跳出，缓慢呈现于他的脑海之中！\n克莱恩.莫雷蒂，北大陆鲁恩王国阿霍瓦郡廷根市人，霍伊大学历史系刚毕业的学生……\n父亲是皇家陆军上士，牺牲于南大陆的殖民冲突，换来的抚恤金让克莱恩有了进入私立文法学校读书的机会，奠定了他考入大学的基础……",750)
 # n.draw_text()
 
-goodNightClass.downLoad_headImage(443142362)
-messageArr = [{'id': 443142362, 'name': '吉祥小哥哥', 'text': '#名字# 晚安式内容1'},{'id': 443142362, 'name': '吉祥小哥哥', 'text': '貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了,貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了,貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了,貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了'},{'id': 443142362, 'name': '吉祥小哥哥', 'text': '#名字# 晚安式内容3'}]
-good = goodNightClass(messageArr)
-good.drow_goodNightImage()
+# goodNightClass.downLoad_headImage(443142362)
+# messageArr = [{'id': 443142362, 'name': '吉祥小哥哥', 'text': '#名字# 晚安式内容1'},{'id': 443142362, 'name': '吉祥小哥哥', 'text': '貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了,貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了,貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了,貌似没有，只有不小心睡着，醒来准备上班发现手机没充电已经自动关机了'},{'id': 443142362, 'name': '吉祥小哥哥', 'text': '#名字# 晚安式内容3'}]
+# good = goodNightClass(messageArr)
+# good.drow_goodNightImage()
 
 
