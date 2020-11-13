@@ -36,7 +36,7 @@ class drowEmoji():
 		pos = (pos_x, 250)
 	
 		draw.text(pos, content, font=imageFont, fill='#000000',align="center") #文字写入图片
-		location = name + " 记仇" + time.strftime(" %Y-%m-%d %H:%M:%S" ,  time.localtime()) + ".png"
+		location = name + " 记仇" + time.strftime(" %Y-%m-%d %H-%M-%S" ,  time.localtime()) + ".png"
 		imagePath = get_FilePath.get_saveImagePath(location)
 		image.save(imagePath) #保存图片
 		return imagePath
@@ -63,7 +63,7 @@ class drowEmoji():
 		pos = (pos_x, 300)
 	
 		draw.text(pos, content, font=imageFont, fill='#333333',align="center") #文字写入图片
-		location = name + " 羡慕" + time.strftime(" %Y-%m-%d %H:%M:%S" ,  time.localtime()) + ".png"
+		location = name + " 羡慕" + time.strftime(" %Y-%m-%d %H-%M-%S" ,  time.localtime()) + ".png"
 		imagePath = get_FilePath.get_saveImagePath(location)
 		image.save(imagePath) #保存图片
 		return imagePath

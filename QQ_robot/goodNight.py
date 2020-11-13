@@ -7,11 +7,14 @@ import requests
 import random
 
 class goodNightClass():
-
+	# def __init__(self,messageArr):
+	# 	self.time= '123' #时间
+	# 	self.messageArr = messageArr # 晚安式队列
+	# 	self.goodNightKey = "#是一个长一点的晚安式呢#"
 	def __init__(self):
+		self.messageArr = [] # 晚安式队列
 		self.time= '' #时间
 		self.goodNightKey = '' #晚安式 关键词
-		self.messageArr = [] # 晚安式队列
 		self.save = False    #是否保存晚安式
 		self.group_id = ""
 		self.keyWord = "晚安式指令介绍\n\
@@ -181,12 +184,19 @@ class goodNightClass():
 		photoBox = (0,0,1080,newH) #左上右下
 		goodNight_Img.paste(photo, photoBox)
 		
+		
+
 		#画上晚安式
 		titlePath = get_FilePath.get_sourePath("Hiragino Sans GB.ttc")
 		titleFont = ImageFont.truetype(titlePath, 60,index=2) #定义文字字体及字号，这里用你自己电	脑本地的字体
 		titleSize = goodNight_draw.multiline_textsize(self.goodNightKey, titleFont)
+		#画个半透明图
+		
+		box_image =  Image.new('RGBA', (titleSize[0]+100, titleSize[1]+40), (255,255,255,128))
+		box_box = (int((1080-titleSize[0])/2-50), newH - 120 ,int((1080-titleSize[0])/2-50)+titleSize[0]+100, int(newH - 120+titleSize[1]+40))
+		goodNight_Img.paste(box_image, box_box,box_image)
 		titleBox = ((1080-titleSize[0])/2, newH -105 )
-		goodNight_draw.text(titleBox, self.goodNightKey, font=titleFont, fill='#333333',align="center") #文字写入图片
+		goodNight_draw.text(titleBox, self.goodNightKey, font=titleFont, fill='#FFFF80',align="center") #文字写入图片
 
 
 		#中间部分

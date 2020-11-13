@@ -3,6 +3,7 @@
 pip install pillow
 pip install requests
 pip install requests_toolbelt
+windows使用时 需要吧savePath的路径/替换为\\ (因为转义字符) 不能使用:
 ```
 #### 安装 Mysql
 ##### 教程
