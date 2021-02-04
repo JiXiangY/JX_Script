@@ -11,4 +11,4 @@ https://www.jianshu.com/p/199492627ccc
 ##### 下载
 https://dev.mysql.com/downloads/mysql/
 
-需要先运行微博weibo.py 以启动晚安式功能
+需要先运行微博weibo.py 以启动晚安式功能 微博使用时需要更新cookie （我自己都给忘了）
